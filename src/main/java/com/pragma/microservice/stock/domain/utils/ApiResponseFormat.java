@@ -1,16 +1,10 @@
 package com.pragma.microservice.stock.domain.utils;
 
-import java.util.HashMap;
-
-public class ApiResponse <T>{
+public class ApiResponseFormat<T>{
     private T data;
-    private Object metadata;
+    private MetadataResponse metadata;
 
-    public ApiResponse(T data) {
-        this.data = data;
-        this.metadata = new HashMap<>();
-    }
-    public ApiResponse(T data, Object metadata) {
+    public ApiResponseFormat(T data, MetadataResponse metadata) {
         this.data = data;
         this.metadata = metadata;
     }
@@ -20,10 +14,12 @@ public class ApiResponse <T>{
     public void setData(T data) {
         this.data = data;
     }
-    public Object getMetadata() {
+
+    public MetadataResponse getMetadata() {
         return metadata;
     }
-    public void setMetadata(Object metadata) {
+
+    public void setMetadata(MetadataResponse metadata) {
         this.metadata = metadata;
     }
 }

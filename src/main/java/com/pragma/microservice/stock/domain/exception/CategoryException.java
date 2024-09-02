@@ -3,8 +3,6 @@ package com.pragma.microservice.stock.domain.exception;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
 public class CategoryException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
@@ -15,5 +13,13 @@ public class CategoryException extends RuntimeException {
         super(errorMessage);
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
+    }
+
+    public int getErrorCode() {
+        return errorCode;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
     }
 }
