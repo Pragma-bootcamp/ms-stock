@@ -6,10 +6,10 @@ import jakarta.validation.constraints.Size;
 
 
 public class CategoryRequestDto {
-    @NotNull(message = CategoryConstant.CATEGORY_NAME_MUST_HAVE_LENGTH)
+    @NotNull(message = CategoryConstant.CATEGORY_NAME_CANNOT_BE_NULL)
     @Size(max = CategoryConstant.MAX_NAME_LENGTH,message = CategoryConstant.CATEGORY_NAME_MUST_HAVE_LENGTH)
     private String name;
-    @NotNull(message = CategoryConstant.CATEGORY_DESCRIPTION_MUST_HAVE_LENGTH)
+    @NotNull(message = CategoryConstant.CATEGORY_DESCRIPTION_CANNOT_BE_NULL)
     @Size(max = CategoryConstant.MAX_DESCRIPTION_LENGTH,message = CategoryConstant.CATEGORY_DESCRIPTION_MUST_HAVE_LENGTH)
     private String description;
 

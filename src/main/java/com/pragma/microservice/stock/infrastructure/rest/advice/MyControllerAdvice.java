@@ -16,7 +16,6 @@ public class MyControllerAdvice {
         ErrorResponse errorResponse = new ErrorResponse(categoryException.getErrorMessage(), categoryException.getErrorCode());
         return ResponseEntity.status(categoryException.getErrorCode()).body(errorResponse);
     }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
         StringBuilder errors = new StringBuilder();
@@ -27,7 +26,6 @@ public class MyControllerAdvice {
         ErrorResponse errResponse = new ErrorResponse(errors.toString().trim(),HttpStatus.BAD_REQUEST.value());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResponse);
     }
-
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorResponse> handleTypeMismatchException(MethodArgumentTypeMismatchException ex) {
         String errorMessage = String.format("El parámetro '%s' tiene un valor inválido: '%s'. Debe ser un número.", ex.getName(), ex.getValue());
