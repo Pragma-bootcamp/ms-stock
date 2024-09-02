@@ -40,7 +40,7 @@ public class CategoryController {
     public ApiResponseFormat<List<CategoryResponseDto>> getAllCategoriesSortedByName(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "5") int size,
-            @RequestParam(value = "direction", defaultValue = "ASC") Sort.Direction direction) {
+            @RequestParam(value = "direction", defaultValue = "ASC" ) Sort.Direction direction) {
         return categoryService.getAllCategories(page, size, direction);
     }
     @Operation(summary = "Create category")

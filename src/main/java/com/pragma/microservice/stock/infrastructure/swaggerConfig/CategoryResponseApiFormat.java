@@ -4,9 +4,10 @@ import com.pragma.microservice.stock.domain.model.dto.response.CategoryResponseD
 import com.pragma.microservice.stock.domain.utils.ApiResponseFormat;
 import com.pragma.microservice.stock.domain.utils.MetadataResponse;
 
-public class CategoryResponseApiFormat extends ApiResponseFormat<CategoryResponseDto> {
-    public CategoryResponseApiFormat(CategoryResponseDto data, MetadataResponse metadata) {
+import java.util.List;
+
+public class CategoryResponseApiFormat extends ApiResponseFormat<List<CategoryResponseDto>> {
+    public CategoryResponseApiFormat(List<CategoryResponseDto> data, MetadataResponse metadata) {
         super(data, metadata);
     }
-    // No es necesario agregar código aquí, solo usar la clase específica.
 }
