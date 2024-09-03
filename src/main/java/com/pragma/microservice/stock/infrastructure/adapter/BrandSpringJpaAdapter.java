@@ -1,9 +1,25 @@
 package com.pragma.microservice.stock.infrastructure.adapter;
 
+import com.pragma.microservice.stock.domain.exception.CategoryException;
 import com.pragma.microservice.stock.domain.model.Brand;
+import com.pragma.microservice.stock.domain.model.constant.BrandConstant;
+import com.pragma.microservice.stock.domain.model.constant.CategoryConstant;
 import com.pragma.microservice.stock.domain.port.BrandPersistencePort;
 import com.pragma.microservice.stock.domain.utils.ApiResponseFormat;
+import com.pragma.microservice.stock.domain.utils.ErrorResponse;
+import com.pragma.microservice.stock.infrastructure.adapter.entity.BrandEntity;
+import com.pragma.microservice.stock.infrastructure.adapter.entity.CategoryEntity;
+import com.pragma.microservice.stock.infrastructure.adapter.mapper.BrandDboMapper;
+import com.pragma.microservice.stock.infrastructure.adapter.repository.BrandRepository;
+import com.pragma.microservice.stock.infrastructure.swaggerConfig.CategoryResponseApiFormat;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,11 +27,34 @@ import java.util.List;
 @Service
 @Transactional
 public class BrandSpringJpaAdapter implements BrandPersistencePort {
-    @Override
-    public Brand createBrand(Brand brand) {
-        return null;
+    private final BrandRepository brandRepository;
+    private final BrandDboMapper brandDboMapper;
+
+    public BrandSpringJpaAdapter(BrandRepository brandRepository, BrandDboMapper brandDboMapper) {
+        this.brandRepository = brandRepository;
+        this.brandDboMapper = brandDboMapper;
     }
 
+    @Override
+    public Brand createBrand(Brand brand) {
+        List<BrandEntity> existingBrand = brandRepository.findByName(brand.getName());
+        if (!existingBrand.isEmpty()) {
+            throw new CategoryException(HttpStatus.CONFLICT.value(),String.format(BrandConstant.BRAND_ALREADY_EXISTS_MESSAGE_ERROR,brand.getName()));
+        }
+        BrandEntity brandToSave = brandDboMapper.toDbo(brand);
+        BrandEntity savedBrand = brandRepository.save(brandToSave);
+        return brandDboMapper.toDomain(savedBrand);
+    }
+    @Operation(summary = "Create brand")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Category created",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = CategoryResponseApiFormat.class)) }),
+            @ApiResponse(responseCode = "409", description = "The category already exist",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class), examples = @ExampleObject(name = "CategoryException",summary = "Example response when the category already exists",
+                            value = "{ \"status\": 409, \"message\": \"The Brand 'Electronics' already exists.\" }" ))}),
+    })
     @Override
     public ApiResponseFormat<List<Brand>> getAllBrands(int page, int size) {
         return null;

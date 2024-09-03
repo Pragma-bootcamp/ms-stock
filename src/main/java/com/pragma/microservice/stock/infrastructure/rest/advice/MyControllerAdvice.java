@@ -1,5 +1,6 @@
 package com.pragma.microservice.stock.infrastructure.rest.advice;
 
+import com.pragma.microservice.stock.domain.exception.BrandException;
 import com.pragma.microservice.stock.domain.exception.CategoryException;
 import com.pragma.microservice.stock.domain.utils.ErrorResponse;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,11 @@ public class MyControllerAdvice {
     public ResponseEntity<ErrorResponse> handleCategoryException(CategoryException categoryException) {
         ErrorResponse errorResponse = new ErrorResponse(categoryException.getErrorMessage(), categoryException.getErrorCode());
         return ResponseEntity.status(categoryException.getErrorCode()).body(errorResponse);
+    }
+    @ExceptionHandler(BrandException.class)
+    public ResponseEntity<ErrorResponse> handleCategoryException(BrandException brandException) {
+        ErrorResponse errorResponse = new ErrorResponse(brandException.getErrorMessage(), brandException.getErrorCode());
+        return ResponseEntity.status(brandException.getErrorCode()).body(errorResponse);
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
