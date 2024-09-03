@@ -35,7 +35,6 @@ public class CategoryService implements CategoryUseCase {
         Category categoryCreated = categoryPersistencePort.createCategory(categoryToCreate);
         return new ApiResponseFormat<>(categoryResponseDtoMapper.toDto(categoryCreated),null);
     }
-
     @Override
     public ApiResponseFormat<List<CategoryResponseDto>> getAllCategories(int page, int size, Sort.Direction direction) {
         ApiResponseFormat<List<Category>> response = categoryPersistencePort.getAllCategories(page, size);
