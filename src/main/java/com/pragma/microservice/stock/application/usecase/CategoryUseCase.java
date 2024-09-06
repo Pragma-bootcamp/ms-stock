@@ -1,7 +1,7 @@
 package com.pragma.microservice.stock.application.usecase;
 
-import com.pragma.microservice.stock.domain.model.dto.request.CategoryRequestDto;
-import com.pragma.microservice.stock.domain.model.dto.response.CategoryResponseDto;
+import com.pragma.microservice.stock.application.dto.request.CategoryRequestDto;
+import com.pragma.microservice.stock.application.dto.response.CategoryResponseDto;
 import com.pragma.microservice.stock.domain.utils.ApiResponseFormat;
 import org.springframework.data.domain.Sort;
 

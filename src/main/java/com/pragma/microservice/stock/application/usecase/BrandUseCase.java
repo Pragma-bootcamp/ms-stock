@@ -1,7 +1,7 @@
 package com.pragma.microservice.stock.application.usecase;
 
-import com.pragma.microservice.stock.domain.model.dto.request.BrandRequestDto;
-import com.pragma.microservice.stock.domain.model.dto.response.BrandResponseDto;
+import com.pragma.microservice.stock.application.dto.request.BrandRequestDto;
+import com.pragma.microservice.stock.application.dto.response.BrandResponseDto;
 import com.pragma.microservice.stock.domain.utils.ApiResponseFormat;
 import org.springframework.data.domain.Sort;
 

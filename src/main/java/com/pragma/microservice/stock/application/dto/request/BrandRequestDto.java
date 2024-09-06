@@ -1,4 +1,4 @@
-package com.pragma.microservice.stock.domain.model.dto.request;
+package com.pragma.microservice.stock.application.dto.request;
 
 import com.pragma.microservice.stock.domain.model.constant.BrandConstant;
 import com.pragma.microservice.stock.domain.model.constant.CategoryConstant;

@@ -2,16 +2,17 @@ package com.pragma.microservice.stock.infrastructure.adapter;
 
 import com.pragma.microservice.stock.domain.exception.CategoryException;
 import com.pragma.microservice.stock.domain.model.Brand;
+import com.pragma.microservice.stock.domain.model.Category;
 import com.pragma.microservice.stock.domain.model.constant.BrandConstant;
-import com.pragma.microservice.stock.domain.model.constant.CategoryConstant;
 import com.pragma.microservice.stock.domain.port.BrandPersistencePort;
 import com.pragma.microservice.stock.domain.utils.ApiResponseFormat;
 import com.pragma.microservice.stock.domain.utils.ErrorResponse;
+import com.pragma.microservice.stock.domain.utils.MetadataResponse;
 import com.pragma.microservice.stock.infrastructure.adapter.entity.BrandEntity;
 import com.pragma.microservice.stock.infrastructure.adapter.entity.CategoryEntity;
 import com.pragma.microservice.stock.infrastructure.adapter.mapper.BrandDboMapper;
 import com.pragma.microservice.stock.infrastructure.adapter.repository.BrandRepository;
-import com.pragma.microservice.stock.infrastructure.swaggerConfig.CategoryResponseApiFormat;
+import com.pragma.microservice.stock.infrastructure.swaggerConfig.CategoryResponseListApiFormat;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -19,6 +20,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +53,7 @@ public class BrandSpringJpaAdapter implements BrandPersistencePort {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Category created",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = CategoryResponseApiFormat.class)) }),
+                            schema = @Schema(implementation = CategoryResponseListApiFormat.class)) }),
             @ApiResponse(responseCode = "409", description = "The category already exist",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ErrorResponse.class), examples = @ExampleObject(name = "CategoryException",summary = "Example response when the category already exists",
@@ -57,6 +61,12 @@ public class BrandSpringJpaAdapter implements BrandPersistencePort {
     })
     @Override
     public ApiResponseFormat<List<Brand>> getAllBrands(int page, int size) {
-        return null;
+        Pageable pageable = PageRequest.of(page, size);
+        Page<BrandEntity> brandPage = brandRepository.findAll(pageable);
+        List<Brand> brands= brandPage
+                .stream()
+                .map(brandDboMapper::toDomain).toList();
+        MetadataResponse meta = new MetadataResponse(page,brandPage.getTotalElements(),brandPage.getTotalPages(),size);
+        return new ApiResponseFormat<>(brands,meta);
     }
 }

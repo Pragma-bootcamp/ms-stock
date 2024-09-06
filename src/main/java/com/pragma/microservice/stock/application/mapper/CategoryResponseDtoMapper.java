@@ -1,7 +1,7 @@
 package com.pragma.microservice.stock.application.mapper;
 
 import com.pragma.microservice.stock.domain.model.Category;
-import com.pragma.microservice.stock.domain.model.dto.response.CategoryResponseDto;
+import com.pragma.microservice.stock.application.dto.response.CategoryResponseDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

@@ -6,6 +6,7 @@ import com.pragma.microservice.stock.domain.utils.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -37,6 +38,12 @@ public class MyControllerAdvice {
         String errorMessage = String.format("El parámetro '%s' tiene un valor inválido: '%s'. Debe ser un número.", ex.getName(), ex.getValue());
         ErrorResponse response = new ErrorResponse(errorMessage,HttpStatus.BAD_REQUEST.value() );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse> handleValidationExceptions(MissingServletRequestParameterException ex) {
+        ErrorResponse errResponse = new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResponse);
     }
 
 }
