@@ -41,7 +41,7 @@ public class MyControllerAdvice {
     }
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorResponse> handleTypeMismatchException(MethodArgumentTypeMismatchException ex) {
-        String errorMessage = String.format("El parámetro '%s' tiene un valor inválido: '%s'. Debe ser un número.", ex.getName(), ex.getValue());
+        String errorMessage = String.format("El parámetro '%s' tiene un valor inválido: '%s'", ex.getName(), ex.getMostSpecificCause().getMessage());
         ErrorResponse response = new ErrorResponse(errorMessage,HttpStatus.BAD_REQUEST.value() );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }

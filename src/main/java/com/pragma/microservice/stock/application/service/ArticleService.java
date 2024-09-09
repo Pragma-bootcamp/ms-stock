@@ -13,6 +13,8 @@ import com.pragma.microservice.stock.domain.model.constant.ArticleConstant;
 import com.pragma.microservice.stock.domain.port.ArticlePersistencePort;
 import com.pragma.microservice.stock.domain.port.CategoryPersistencePort;
 import com.pragma.microservice.stock.domain.utils.ApiResponseFormat;
+import com.pragma.microservice.stock.domain.utils.MetadataResponse;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -57,5 +59,13 @@ public class ArticleService implements ArticleUseCase {
         articleToCreate.setCategories(categories);
         Article articleCreated = articlePersistencePort.createArticle(articleToCreate);
         return new ApiResponseFormat<>(articleResponseDtoMapper.toDto(articleCreated),null);
+    }
+
+    @Override
+    public ApiResponseFormat<List<ArticleResponseDto>> getAllArticles(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection) {
+        ApiResponseFormat<List<Article>> allArticles = articlePersistencePort.getAllArticles(pageNumber,pageSize,sortBy,sortDirection);
+        List<ArticleResponseDto> listArticlesResponse= allArticles.getData().stream().map(articleResponseDtoMapper::toDto).toList();
+
+        return new ApiResponseFormat<>(listArticlesResponse,allArticles.getMetadata());
     }
 }

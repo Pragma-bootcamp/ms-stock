@@ -6,6 +6,7 @@ import com.pragma.microservice.stock.domain.model.constant.ArticleConstant;
 import com.pragma.microservice.stock.domain.model.constant.CategoryConstant;
 import com.pragma.microservice.stock.domain.port.ArticlePersistencePort;
 import com.pragma.microservice.stock.domain.utils.ApiResponseFormat;
+import com.pragma.microservice.stock.domain.utils.MetadataResponse;
 import com.pragma.microservice.stock.infrastructure.adapter.entity.ArticleEntity;
 import com.pragma.microservice.stock.infrastructure.adapter.entity.CategoryEntity;
 import com.pragma.microservice.stock.infrastructure.adapter.mapper.ArticleDboMapper;
@@ -14,10 +15,15 @@ import com.pragma.microservice.stock.infrastructure.adapter.mapper.CategoryDboMa
 import com.pragma.microservice.stock.infrastructure.adapter.repository.ArticleRepository;
 import com.pragma.microservice.stock.infrastructure.adapter.repository.CategoryRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,7 +35,8 @@ public class ArticleSpringJpaAdapter implements ArticlePersistencePort {
     private final ArticleDboMapper articleDboMapper;
     private final CategoryDboMapper categoryDboMapper;
 
-    public ArticleSpringJpaAdapter(ArticleRepository articleRepository,CategoryRepository categoryRepository, ArticleDboMapper articleDboMapper, CategoryDboMapper categoryDboMapper) {
+    public ArticleSpringJpaAdapter(ArticleRepository articleRepository, CategoryRepository categoryRepository,
+                                   ArticleDboMapper articleDboMapper, CategoryDboMapper categoryDboMapper) {
         this.articleRepository = articleRepository;
         this.articleDboMapper = articleDboMapper;
         this.categoryDboMapper = categoryDboMapper;
@@ -55,7 +62,14 @@ public class ArticleSpringJpaAdapter implements ArticlePersistencePort {
     }
 
     @Override
-    public ApiResponseFormat<List<Article>> getAllArticles(Integer size, Integer page, String direction) {
-        return null;
+    public ApiResponseFormat<List<Article>> getAllArticles(Integer page, Integer size, String sortBy,
+                                                           String sortDirection) {
+        Sort.Direction dir = Objects.equals(sortDirection, "DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(dir, sortBy));
+        Page<ArticleEntity> articlePage = articleRepository.findAll(pageable);
+        List<Article> articles = articlePage.getContent().stream().map(articleDboMapper::toDomain).toList();
+        MetadataResponse meta = new MetadataResponse(page, articlePage.getTotalElements(), articlePage.getTotalPages(),
+                size);
+        return new ApiResponseFormat<>(articles, meta);
     }
 }

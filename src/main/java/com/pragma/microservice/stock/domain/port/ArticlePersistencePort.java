@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ArticlePersistencePort {
     Article createArticle(Article article);
-
+    ApiResponseFormat<List<Article>> getAllArticles(Integer page,Integer size, String sortBy,String sortDirection);
 }
