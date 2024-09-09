@@ -8,4 +8,5 @@ import java.util.List;
 public interface CategoryPersistencePort {
     Category createCategory(Category category);
     ApiResponseFormat<List<Category>> getAllCategories(int page, int size);
+    Category getCategory(Long categoryId);
 }

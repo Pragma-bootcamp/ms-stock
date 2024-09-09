@@ -11,6 +11,7 @@ public interface CategoryDboMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")
     @Mapping(source = "description", target = "description")
+    @Mapping(target = "articles",ignore = true)
     @Mapping(source = "createdAt", target = "createdAt")
     @Mapping(source = "updatedAt", target = "updatedAt")
     CategoryEntity toDbo(Category category);

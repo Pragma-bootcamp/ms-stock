@@ -1,7 +1,6 @@
 package com.pragma.microservice.stock.application.dto.request;
 
 import com.pragma.microservice.stock.domain.model.constant.BrandConstant;
-import com.pragma.microservice.stock.domain.model.constant.CategoryConstant;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 

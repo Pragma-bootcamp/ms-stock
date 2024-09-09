@@ -1,10 +1,9 @@
 package com.pragma.microservice.stock.domain.exception;
 
-import lombok.Getter;
-import lombok.Setter;
-
+import java.io.Serial;
 public class CategoryException extends RuntimeException {
 
+    @Serial
     private static final long serialVersionUID = 1L;
     private final int errorCode;
     private final String errorMessage;

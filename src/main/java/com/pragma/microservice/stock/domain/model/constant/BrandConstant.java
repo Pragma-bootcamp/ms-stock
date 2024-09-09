@@ -1,6 +1,8 @@
 package com.pragma.microservice.stock.domain.model.constant;
 
 public class BrandConstant {
+    private BrandConstant() {
+    }
     public static final int MAX_NAME_LENGTH = 50;
     public static final int MIN_NAME_LENGTH = 3;
     public static final int MAX_DESCRIPTION_LENGTH = 120;

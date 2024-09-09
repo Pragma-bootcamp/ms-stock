@@ -1,49 +1,26 @@
 package com.pragma.microservice.stock.application.dto.response;
 
-import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.Set;
+@Getter
+@Setter
 public class ArticleResponseDto {
     private Long id;
     private String name;
     private String description;
     private Set<CategoryResponseDto> categories;
+    private Integer amount;
+    private Double price;
 
-    public ArticleResponseDto(Long id, String name, String description, Set<CategoryResponseDto> categories) {
+    public ArticleResponseDto(Long id, String name, String description, Set<CategoryResponseDto> categories, Integer amount, Double price) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.categories = categories;
+        this.amount = amount;
+        this.price = price;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Set<CategoryResponseDto> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(Set<CategoryResponseDto> categories) {
-        this.categories = categories;
-    }
 }

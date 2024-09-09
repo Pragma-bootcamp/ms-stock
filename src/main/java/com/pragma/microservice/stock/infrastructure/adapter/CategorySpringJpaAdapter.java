@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -50,5 +51,14 @@ public class CategorySpringJpaAdapter implements CategoryPersistencePort {
                 .map(categoryDboMapper::toDomain).toList();
         MetadataResponse meta = new MetadataResponse(page,categoryPage.getTotalElements(),categoryPage.getTotalPages(),size);
         return new ApiResponseFormat<>(categories,meta);
+    }
+
+    @Override
+    public Category getCategory(Long categoryId) {
+        Optional<CategoryEntity> existingCategory = categoryRepository.findById(categoryId);
+        if(existingCategory.isEmpty()){
+            throw new CategoryException(HttpStatus.NOT_FOUND.value(), String.format(CategoryConstant.CATEGORY_NOT_FOUND, categoryId));
+        }
+        return categoryDboMapper.toDomain(existingCategory.get());
     }
 }

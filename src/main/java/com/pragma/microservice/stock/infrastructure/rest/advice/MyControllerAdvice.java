@@ -1,5 +1,6 @@
 package com.pragma.microservice.stock.infrastructure.rest.advice;
 
+import com.pragma.microservice.stock.domain.exception.ArticleException;
 import com.pragma.microservice.stock.domain.exception.BrandException;
 import com.pragma.microservice.stock.domain.exception.CategoryException;
 import com.pragma.microservice.stock.domain.utils.ErrorResponse;
@@ -19,9 +20,14 @@ public class MyControllerAdvice {
         return ResponseEntity.status(categoryException.getErrorCode()).body(errorResponse);
     }
     @ExceptionHandler(BrandException.class)
-    public ResponseEntity<ErrorResponse> handleCategoryException(BrandException brandException) {
+    public ResponseEntity<ErrorResponse> handleBrandException(BrandException brandException) {
         ErrorResponse errorResponse = new ErrorResponse(brandException.getErrorMessage(), brandException.getErrorCode());
         return ResponseEntity.status(brandException.getErrorCode()).body(errorResponse);
+    }
+    @ExceptionHandler(ArticleException.class)
+    public ResponseEntity<ErrorResponse> handleArticleException(ArticleException articleException) {
+        ErrorResponse errorResponse = new ErrorResponse(articleException.getErrorMessage(), articleException.getErrorCode());
+        return ResponseEntity.status(articleException.getErrorCode()).body(errorResponse);
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
