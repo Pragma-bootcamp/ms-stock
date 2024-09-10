@@ -1,26 +1,25 @@
 package com.pragma.microservice.stock.application.service;
 
 import com.pragma.microservice.stock.application.dto.request.ArticleRequestDto;
-import com.pragma.microservice.stock.application.dto.response.ArticleResponseDto;
-import com.pragma.microservice.stock.application.mapper.ArticleRequestDtoMapper;
-import com.pragma.microservice.stock.application.mapper.ArticleResponseDtoMapper;
-import com.pragma.microservice.stock.application.mapper.CategoryResponseDtoMapper;
+import com.pragma.microservice.stock.application.dto.request.constant.RequestConstant;
+import com.pragma.microservice.stock.application.dto.response.article.ArticleResponseDto;
+import com.pragma.microservice.stock.application.exception.FilterException;
+import com.pragma.microservice.stock.application.exception.PaginationException;
+import com.pragma.microservice.stock.application.mapper.article.ArticleRequestDtoMapper;
+import com.pragma.microservice.stock.application.mapper.article.ArticleResponseDtoMapper;
 import com.pragma.microservice.stock.application.usecase.ArticleUseCase;
 import com.pragma.microservice.stock.domain.exception.ArticleException;
 import com.pragma.microservice.stock.domain.model.Article;
-import com.pragma.microservice.stock.domain.model.Category;
+
 import com.pragma.microservice.stock.domain.model.constant.ArticleConstant;
 import com.pragma.microservice.stock.domain.port.ArticlePersistencePort;
+import com.pragma.microservice.stock.domain.port.BrandPersistencePort;
 import com.pragma.microservice.stock.domain.port.CategoryPersistencePort;
 import com.pragma.microservice.stock.domain.utils.ApiResponseFormat;
-import com.pragma.microservice.stock.domain.utils.MetadataResponse;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleService implements ArticleUseCase {
@@ -28,44 +27,80 @@ public class ArticleService implements ArticleUseCase {
     private final ArticleRequestDtoMapper articleRequestDtoMapper;
     private final ArticlePersistencePort articlePersistencePort;
     private final CategoryPersistencePort categoryPersistencePort;
-    private final CategoryResponseDtoMapper categoryResponseDtoMapper;
+    private final BrandPersistencePort brandPersistencePort;
 
     public ArticleService(final ArticleResponseDtoMapper articleResponseDtoMapper,
                           final ArticleRequestDtoMapper articleRequestDtoMapper,
                           final ArticlePersistencePort articlePersistencePort,
                           final CategoryPersistencePort categoryPersistencePort,
-                          final CategoryResponseDtoMapper categoryResponseDtoMapper) {
+                          final BrandPersistencePort brandPersistencePort) {
         this.articleResponseDtoMapper = articleResponseDtoMapper;
         this.articleRequestDtoMapper = articleRequestDtoMapper;
         this.articlePersistencePort = articlePersistencePort;
         this.categoryPersistencePort = categoryPersistencePort;
-        this.categoryResponseDtoMapper = categoryResponseDtoMapper;
+        this.brandPersistencePort = brandPersistencePort;
     }
+
     @Override
     public ApiResponseFormat<ArticleResponseDto> createArticle(ArticleRequestDto articleRequestDto) {
-        if(articleRequestDto.getCategories().isEmpty()) {
-            throw new ArticleException(HttpStatus.BAD_REQUEST.value(), ArticleConstant.CATEGORIES_MUST_HAVE_LEAST_ONE);
-        }
-        if (new HashSet<Long>(articleRequestDto.getCategories()).size() != articleRequestDto.getCategories().size()) {
-            throw new ArticleException(HttpStatus.BAD_REQUEST.value(), ArticleConstant.CATEGORIES_CANT_BE_DUPLICATED);
-        }
-
+        articleRequestDto.validate();
         Article articleToCreate = articleRequestDtoMapper.toDomain(articleRequestDto);
-        List<Category> categories = new ArrayList<>();
-        for (Long categoryId : articleRequestDto.getCategories()) {
-           Category articleCategory = categoryPersistencePort.getCategory(categoryId);
-           categories.add(articleCategory);
-        }
-        articleToCreate.setCategories(categories);
+        articleToCreate.setBrand(brandPersistencePort.getBrand(articleRequestDto.getBrand()));
+        articleToCreate.setCategories(articleRequestDto.getCategories()
+                .stream()
+                .map(categoryPersistencePort::getCategory)
+                .collect(Collectors.toSet()));
         Article articleCreated = articlePersistencePort.createArticle(articleToCreate);
-        return new ApiResponseFormat<>(articleResponseDtoMapper.toDto(articleCreated),null);
+        return new ApiResponseFormat<>(articleResponseDtoMapper.toDto(articleCreated), null);
     }
 
     @Override
-    public ApiResponseFormat<List<ArticleResponseDto>> getAllArticles(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection) {
-        ApiResponseFormat<List<Article>> allArticles = articlePersistencePort.getAllArticles(pageNumber,pageSize,sortBy,sortDirection);
-        List<ArticleResponseDto> listArticlesResponse= allArticles.getData().stream().map(articleResponseDtoMapper::toDto).toList();
+    public ApiResponseFormat<List<ArticleResponseDto>> getAllArticles(Integer pageNumber, Integer pageSize,
+                                                                      String sortBy, String sortDirection,
+                                                                      String filterBy, String filterValue) {
+        //Validate pagination and filters
+        validatePagination(pageNumber, pageSize, sortBy, sortDirection, filterBy, filterValue);
+        //Get the Articles
+        ApiResponseFormat<List<Article>> allArticles =
+                articlePersistencePort.getAllArticles(pageNumber, pageSize, sortBy,
+                        sortDirection, filterBy, filterValue);
+        //Transform to response
+        List<ArticleResponseDto> listArticlesResponse = allArticles
+                .getData()
+                .stream()
+                .map(articleResponseDtoMapper::toDto).toList();
+        return new ApiResponseFormat<>(listArticlesResponse, allArticles.getMetadata());
+    }
 
-        return new ApiResponseFormat<>(listArticlesResponse,allArticles.getMetadata());
+    public void validatePagination(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection,
+                                   String filterBy, String filterValue) {
+        boolean isCategoryFilter = filterBy.equals("category");
+        if (pageNumber < 0 || pageSize < 0) {
+            throw new PaginationException(HttpStatus.BAD_REQUEST.value(), RequestConstant.PAGINATION_CANNOT_BE_NEGATIVE);
+        }
+        if (!(sortBy.equals("name") || sortBy.equals("price") || sortBy.equals("amount"))) {
+            throw new FilterException(HttpStatus.BAD_REQUEST.value(), ArticleConstant.ARTICLE_SORT_BY_FIELDS);
+        }
+        if (!(sortDirection.equalsIgnoreCase("asc") || sortDirection.equalsIgnoreCase("desc"))) {
+            throw new ArticleException(HttpStatus.BAD_REQUEST.value(), RequestConstant.ORDER_BY_FIELDS);
+        }
+        if (!(filterBy.equals("category") || filterBy.equals("brand") || filterBy.equals("none"))) {
+            throw new FilterException(HttpStatus.BAD_REQUEST.value(), RequestConstant.FILTER_BY_FIELDS);
+        }
+        if ((isCategoryFilter || filterBy.equals("brand"))
+                && (filterValue.isBlank() || filterValue.equals("none") || filterValue.isEmpty())) {
+            throw new FilterException(HttpStatus.BAD_REQUEST.value(),
+                    String.format(RequestConstant.FILTER_VALUE_CANT_BE_NULL, "filterValue"));
+        }
+        if (isCategoryFilter) {
+            try {
+                Long.parseLong(filterValue);
+            } catch (NumberFormatException e) {
+                throw new FilterException(HttpStatus.BAD_REQUEST.value(),
+                        String.format(RequestConstant.FILTER_VALUE_MUST_BE_NUMBER, "filterValue"));
+            }
+        }
+
+
     }
 }

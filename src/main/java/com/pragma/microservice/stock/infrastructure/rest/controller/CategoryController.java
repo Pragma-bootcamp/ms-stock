@@ -2,10 +2,10 @@ package com.pragma.microservice.stock.infrastructure.rest.controller;
 
 import com.pragma.microservice.stock.application.service.CategoryService;
 import com.pragma.microservice.stock.application.dto.request.CategoryRequestDto;
-import com.pragma.microservice.stock.application.dto.response.CategoryResponseDto;
+import com.pragma.microservice.stock.application.dto.response.category.CategoryResponseDto;
 import com.pragma.microservice.stock.domain.utils.ApiResponseFormat;
 import com.pragma.microservice.stock.domain.utils.ErrorResponse;
-import com.pragma.microservice.stock.infrastructure.swaggerConfig.CategoryResponseListApiFormat;
+import com.pragma.microservice.stock.infrastructure.configuration.swagger.CategoryResponseListApiFormat;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;

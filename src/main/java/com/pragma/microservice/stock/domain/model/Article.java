@@ -1,7 +1,7 @@
 package com.pragma.microservice.stock.domain.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 public class Article {
     private Long id;
@@ -9,16 +9,18 @@ public class Article {
     private String description;
     private int amount;
     private double price;
-    private List<Category> categories;
+    private Set<Category> categories;
+    private Brand brand;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public Article(Long id, String name, String description,List<Category> categories,int amount,double price) {
+    public Article(Long id, String name, String description, Set<Category> categories, int amount, double price,Brand brand) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.categories = categories;
         this.amount = amount;
+        this.brand = brand;
         this.price = price;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
@@ -83,11 +85,19 @@ public class Article {
         this.description = description;
     }
 
-    public List<Category> getCategories() {
+    public Set<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<Category> categories) {
+    public void setCategories(Set<Category> categories) {
         this.categories = categories;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
     }
 }

@@ -1,7 +1,7 @@
-package com.pragma.microservice.stock.application.mapper;
+package com.pragma.microservice.stock.application.mapper.brand;
 
 import com.pragma.microservice.stock.domain.model.Brand;
-import com.pragma.microservice.stock.application.dto.response.BrandResponseDto;
+import com.pragma.microservice.stock.application.dto.response.brand.BrandResponseDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")

@@ -1,4 +1,4 @@
-package com.pragma.microservice.stock.application.mapper;
+package com.pragma.microservice.stock.application.mapper.category;
 
 import com.pragma.microservice.stock.domain.model.Category;
 import com.pragma.microservice.stock.application.dto.request.CategoryRequestDto;

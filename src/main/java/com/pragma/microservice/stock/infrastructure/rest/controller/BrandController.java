@@ -2,11 +2,11 @@ package com.pragma.microservice.stock.infrastructure.rest.controller;
 
 import com.pragma.microservice.stock.application.service.BrandService;
 import com.pragma.microservice.stock.application.dto.request.BrandRequestDto;
-import com.pragma.microservice.stock.application.dto.response.BrandResponseDto;
+import com.pragma.microservice.stock.application.dto.response.brand.BrandResponseDto;
 import com.pragma.microservice.stock.domain.utils.ApiResponseFormat;
 import com.pragma.microservice.stock.domain.utils.ErrorResponse;
-import com.pragma.microservice.stock.infrastructure.swaggerConfig.BrandResponseListApiFormat;
-import com.pragma.microservice.stock.infrastructure.swaggerConfig.BrandResponseUniqueApiFormat;
+import com.pragma.microservice.stock.infrastructure.configuration.swagger.BrandResponseListApiFormat;
+import com.pragma.microservice.stock.infrastructure.configuration.swagger.BrandResponseUniqueApiFormat;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;

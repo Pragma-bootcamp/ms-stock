@@ -10,8 +10,6 @@ import com.pragma.microservice.stock.domain.utils.MetadataResponse;
 import com.pragma.microservice.stock.infrastructure.adapter.entity.ArticleEntity;
 import com.pragma.microservice.stock.infrastructure.adapter.entity.CategoryEntity;
 import com.pragma.microservice.stock.infrastructure.adapter.mapper.ArticleDboMapper;
-import com.pragma.microservice.stock.infrastructure.adapter.mapper.CategoryDboMapper;
-import com.pragma.microservice.stock.infrastructure.adapter.mapper.CategoryDboMapperImpl;
 import com.pragma.microservice.stock.infrastructure.adapter.repository.ArticleRepository;
 import com.pragma.microservice.stock.infrastructure.adapter.repository.CategoryRepository;
 import jakarta.transaction.Transactional;
@@ -33,13 +31,11 @@ public class ArticleSpringJpaAdapter implements ArticlePersistencePort {
     private final ArticleRepository articleRepository;
     private final CategoryRepository categoryRepository;
     private final ArticleDboMapper articleDboMapper;
-    private final CategoryDboMapper categoryDboMapper;
 
     public ArticleSpringJpaAdapter(ArticleRepository articleRepository, CategoryRepository categoryRepository,
-                                   ArticleDboMapper articleDboMapper, CategoryDboMapper categoryDboMapper) {
+                                   ArticleDboMapper articleDboMapper) {
         this.articleRepository = articleRepository;
         this.articleDboMapper = articleDboMapper;
-        this.categoryDboMapper = categoryDboMapper;
         this.categoryRepository = categoryRepository;
     }
 
@@ -63,10 +59,17 @@ public class ArticleSpringJpaAdapter implements ArticlePersistencePort {
 
     @Override
     public ApiResponseFormat<List<Article>> getAllArticles(Integer page, Integer size, String sortBy,
-                                                           String sortDirection) {
+                                                           String sortDirection, String filterBy, String filterValue) {
         Sort.Direction dir = Objects.equals(sortDirection, "DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(dir, sortBy));
-        Page<ArticleEntity> articlePage = articleRepository.findAll(pageable);
+        Page<ArticleEntity> articlePage = switch (filterBy.toLowerCase()) {
+            case "category" -> {
+                Long categoryId = Long.parseLong(filterValue);
+                yield articleRepository.findByCategoryId(categoryId, pageable);
+            }
+            case "brand" -> articleRepository.findByBrandName(filterValue, pageable);
+            default -> articleRepository.findAll(pageable);
+        };
         List<Article> articles = articlePage.getContent().stream().map(articleDboMapper::toDomain).toList();
         MetadataResponse meta = new MetadataResponse(page, articlePage.getTotalElements(), articlePage.getTotalPages(),
                 size);

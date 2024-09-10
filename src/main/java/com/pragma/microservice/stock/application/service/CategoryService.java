@@ -1,10 +1,10 @@
 package com.pragma.microservice.stock.application.service;
 
-import com.pragma.microservice.stock.application.mapper.CategoryRequestDtoMapper;
-import com.pragma.microservice.stock.application.mapper.CategoryResponseDtoMapper;
+import com.pragma.microservice.stock.application.mapper.category.CategoryRequestDtoMapper;
+import com.pragma.microservice.stock.application.mapper.category.CategoryResponseDtoMapper;
 import com.pragma.microservice.stock.domain.model.Category;
 import com.pragma.microservice.stock.application.dto.request.CategoryRequestDto;
-import com.pragma.microservice.stock.application.dto.response.CategoryResponseDto;
+import com.pragma.microservice.stock.application.dto.response.category.CategoryResponseDto;
 import com.pragma.microservice.stock.domain.port.CategoryPersistencePort;
 import com.pragma.microservice.stock.application.usecase.CategoryUseCase;
 import com.pragma.microservice.stock.domain.utils.ApiResponseFormat;
@@ -39,11 +39,9 @@ public class CategoryService implements CategoryUseCase {
     public ApiResponseFormat<List<CategoryResponseDto>> getAllCategories(int page, int size, Sort.Direction direction) {
         ApiResponseFormat<List<Category>> response = categoryPersistencePort.getAllCategories(page, size);
         Comparator<Category> comparator = Comparator.comparing(Category::getName);
-        if (direction == Sort.Direction.DESC) {
-            comparator = comparator.reversed();
-        }
-        List<CategoryResponseDto> sortedCategories = response.getData().stream().sorted(comparator).map(categoryResponseDtoMapper::toDto)
-                .toList();
+        if (direction == Sort.Direction.DESC) comparator = comparator.reversed();
+        List<CategoryResponseDto> sortedCategories = response.getData().stream().sorted(comparator).
+                map(categoryResponseDtoMapper::toDto).toList();
         return new ApiResponseFormat<>(sortedCategories,response.getMetadata());
     }
 }

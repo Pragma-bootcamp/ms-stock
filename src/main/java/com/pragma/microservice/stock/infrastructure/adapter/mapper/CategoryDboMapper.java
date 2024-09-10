@@ -18,4 +18,5 @@ public interface CategoryDboMapper {
 
     @InheritInverseConfiguration
     Category toDomain(CategoryEntity entity);
+
 }

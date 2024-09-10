@@ -2,24 +2,23 @@ package com.pragma.microservice.stock.domain.model;
 
 import java.time.LocalDateTime;
 
+
 public class Category {
     private Long id;
     private String name;
     private String description;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
     public Category(Long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
+
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
-
     public Category() {
     }
-
     public Long getId() {
         return id;
     }
@@ -59,4 +58,5 @@ public class Category {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
 }

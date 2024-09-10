@@ -1,5 +1,6 @@
 package com.pragma.microservice.stock.infrastructure.adapter;
 
+import com.pragma.microservice.stock.domain.exception.BrandException;
 import com.pragma.microservice.stock.domain.exception.CategoryException;
 import com.pragma.microservice.stock.domain.model.Brand;
 import com.pragma.microservice.stock.domain.model.constant.BrandConstant;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -49,5 +51,14 @@ public class BrandSpringJpaAdapter implements BrandPersistencePort {
                 .map(brandDboMapper::toDomain).toList();
         MetadataResponse meta = new MetadataResponse(page,brandPage.getTotalElements(),brandPage.getTotalPages(),size);
         return new ApiResponseFormat<>(brands,meta);
+    }
+
+    @Override
+    public Brand getBrand(Long id) {
+        Optional<BrandEntity> brand = brandRepository.findById(id);
+        if (brand.isEmpty()) {
+            throw new BrandException(HttpStatus.NOT_FOUND.value(),String.format(BrandConstant.BRAND_NOT_FOUND,id));
+        }
+        return brandDboMapper.toDomain(brand.get());
     }
 }

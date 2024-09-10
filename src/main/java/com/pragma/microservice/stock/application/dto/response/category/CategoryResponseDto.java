@@ -1,4 +1,4 @@
-package com.pragma.microservice.stock.application.dto.response;
+package com.pragma.microservice.stock.application.dto.response.category;
 
 public class CategoryResponseDto {
     private Long id;
@@ -30,4 +30,5 @@ public class CategoryResponseDto {
     public void setDescription(String description) {
         this.description = description;
     }
+
 }

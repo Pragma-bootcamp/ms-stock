@@ -1,31 +1,32 @@
 package com.pragma.microservice.stock.infrastructure.rest.controller;
 
 import com.pragma.microservice.stock.application.dto.request.ArticleRequestDto;
-import com.pragma.microservice.stock.application.dto.response.ArticleResponseDto;
+import com.pragma.microservice.stock.application.dto.response.article.ArticleResponseDto;
 import com.pragma.microservice.stock.application.service.ArticleService;
 import com.pragma.microservice.stock.domain.utils.ApiResponseFormat;
-import com.pragma.microservice.stock.infrastructure.utils.ArticleSortByEnum;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/articles")
-public class ArticleCategory {
+public class ArticleController {
     private ArticleService articleService;
 
-    public ArticleCategory(ArticleService articleService) {
+    public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
     }
+
     @GetMapping()
     public ApiResponseFormat<List<ArticleResponseDto>> getAllArticles(
             @RequestParam(value = "page") int page,
             @RequestParam(value = "size") int size,
-            @RequestParam(value = "sortBy") ArticleSortByEnum sortBy,
-            @RequestParam(value = "sortDir", defaultValue = "ASC" ) Sort.Direction sortDir) {
-        return articleService.getAllArticles(page, size,sortBy.getValue(), sortDir.name());
+            @RequestParam(value = "sortBy", defaultValue = "name") String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir,
+            @RequestParam(value = "filterBy", defaultValue = "none") String filterBy,
+            @RequestParam(value = "filterValue", defaultValue = "none") String filterValue) {
+        return articleService.getAllArticles(page, size, sortBy, sortDir.toUpperCase(),
+                filterBy, filterValue);
     }
     @PostMapping()
     public ApiResponseFormat<ArticleResponseDto> createBrand(@Valid @RequestBody ArticleRequestDto articleRequest) {

@@ -1,10 +1,10 @@
 package com.pragma.microservice.stock.application.service;
 
-import com.pragma.microservice.stock.application.mapper.BrandRequestDtoMapper;
-import com.pragma.microservice.stock.application.mapper.BrandResponseDtoMapper;
+import com.pragma.microservice.stock.application.mapper.brand.BrandRequestDtoMapper;
+import com.pragma.microservice.stock.application.mapper.brand.BrandResponseDtoMapper;
 import com.pragma.microservice.stock.domain.model.Brand;
 import com.pragma.microservice.stock.application.dto.request.BrandRequestDto;
-import com.pragma.microservice.stock.application.dto.response.BrandResponseDto;
+import com.pragma.microservice.stock.application.dto.response.brand.BrandResponseDto;
 import com.pragma.microservice.stock.domain.port.BrandPersistencePort;
 import com.pragma.microservice.stock.application.usecase.BrandUseCase;
 import com.pragma.microservice.stock.domain.utils.ApiResponseFormat;

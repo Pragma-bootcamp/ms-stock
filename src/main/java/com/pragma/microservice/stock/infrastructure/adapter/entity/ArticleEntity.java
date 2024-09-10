@@ -24,6 +24,9 @@ public class ArticleEntity {
     private String description;
     private Integer amount;
     private Double price;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id", nullable = false) // Solo debe haber brand_id aquí
+    private BrandEntity brand;
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
@@ -31,7 +34,7 @@ public class ArticleEntity {
             })
     @JoinTable(name = "article_category",
             joinColumns =  @JoinColumn(name = "article_id", referencedColumnName = "id") ,
-            inverseJoinColumns = @JoinColumn(name = "categori_id", referencedColumnName = "id") )
+            inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id") )
     private Set<CategoryEntity> categories;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

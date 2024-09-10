@@ -1,4 +1,4 @@
-package com.pragma.microservice.stock.application.dto.response;
+package com.pragma.microservice.stock.application.dto.response.brand;
 
 public class BrandResponseDto {
     private Long id;

@@ -1,4 +1,4 @@
-package com.pragma.microservice.stock.application.mapper;
+package com.pragma.microservice.stock.application.mapper.article;
 
 import com.pragma.microservice.stock.application.dto.request.ArticleRequestDto;
 import com.pragma.microservice.stock.domain.model.Article;
@@ -11,6 +11,7 @@ public interface ArticleRequestDtoMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "name", target = "name")
     @Mapping(source = "description", target = "description")
+    @Mapping(target = "brand",ignore = true)
     @Mapping(target = "categories", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "createdAt", ignore = true)

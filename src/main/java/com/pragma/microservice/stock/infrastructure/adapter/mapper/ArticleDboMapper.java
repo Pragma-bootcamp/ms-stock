@@ -5,11 +5,13 @@ import com.pragma.microservice.stock.infrastructure.adapter.entity.ArticleEntity
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-@Mapper(componentModel = "spring")
+
+@Mapper(componentModel = "spring",uses = {CategoryDboMapper.class})
 public interface ArticleDboMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")
     @Mapping(source = "description", target = "description")
+    @Mapping(source = "brand",target = "brand")
     @Mapping(source = "categories",target = "categories")
     @Mapping(source = "createdAt", target = "createdAt")
     @Mapping(source = "updatedAt", target = "updatedAt")
@@ -17,4 +19,5 @@ public interface ArticleDboMapper {
 
     @InheritInverseConfiguration
     Article toDomain (ArticleEntity entity);
+
 }

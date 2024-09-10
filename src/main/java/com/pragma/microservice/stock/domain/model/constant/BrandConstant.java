@@ -12,4 +12,5 @@ public class BrandConstant {
     public static final String BRAND_DESCRIPTION_CANNOT_BE_NULL = "The field  \"description\" can't be null";
     public static final String BRAND_NAME_MUST_HAVE_LENGTH = "The field \"name\" must have mix 3 characters and max 50";
     public static final String BRAND_DESCRIPTION_MUST_HAVE_LENGTH = "The field  \"description\" must have mix 3 characters and max 90";
+    public static final String BRAND_NOT_FOUND= "The brand with the id %d does not exist";
 }

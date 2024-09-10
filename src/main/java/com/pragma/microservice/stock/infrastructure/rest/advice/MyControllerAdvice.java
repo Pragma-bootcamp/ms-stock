@@ -1,5 +1,7 @@
 package com.pragma.microservice.stock.infrastructure.rest.advice;
 
+import com.pragma.microservice.stock.application.exception.FilterException;
+import com.pragma.microservice.stock.application.exception.PaginationException;
 import com.pragma.microservice.stock.domain.exception.ArticleException;
 import com.pragma.microservice.stock.domain.exception.BrandException;
 import com.pragma.microservice.stock.domain.exception.CategoryException;
@@ -28,6 +30,16 @@ public class MyControllerAdvice {
     public ResponseEntity<ErrorResponse> handleArticleException(ArticleException articleException) {
         ErrorResponse errorResponse = new ErrorResponse(articleException.getErrorMessage(), articleException.getErrorCode());
         return ResponseEntity.status(articleException.getErrorCode()).body(errorResponse);
+    }
+    @ExceptionHandler(FilterException.class)
+    public ResponseEntity<ErrorResponse> handleAFilterException(FilterException filterException) {
+        ErrorResponse errorResponse = new ErrorResponse(filterException.getErrorMessage(), filterException.getErrorCode());
+        return ResponseEntity.status(filterException.getErrorCode()).body(errorResponse);
+    }
+    @ExceptionHandler(PaginationException.class)
+    public ResponseEntity<ErrorResponse> handleArticleException(PaginationException paginationException) {
+        ErrorResponse errorResponse = new ErrorResponse(paginationException.getErrorMessage(), paginationException.getErrorCode());
+        return ResponseEntity.status(paginationException.getErrorCode()).body(errorResponse);
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {

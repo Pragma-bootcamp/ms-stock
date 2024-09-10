@@ -6,4 +6,5 @@ import java.util.List;
 public interface BrandPersistencePort {
     Brand createBrand (Brand brand);
     ApiResponseFormat<List<Brand>> getAllBrands (int page, int size);
+    Brand getBrand (Long id);
 }

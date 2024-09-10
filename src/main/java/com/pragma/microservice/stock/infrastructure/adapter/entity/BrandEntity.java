@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -20,6 +20,8 @@ public class BrandEntity {
     private Long id;
     private String name;
     private String description;
+    @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<ArticleEntity> articles;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
