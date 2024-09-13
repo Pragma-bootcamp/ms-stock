@@ -37,8 +37,8 @@ public class CategoryController {
 
     @GetMapping()
     public ApiResponseFormat<List<CategoryResponseDto>> getAllCategoriesSortedByName(
-            @RequestParam(value = "page", defaultValue = "0" ,required = true) int page,
-            @RequestParam(value = "size", defaultValue = "5", required = true) int size,
+            @RequestParam(value = "page") int page,
+            @RequestParam(value = "size") int size,
             @RequestParam(value = "direction", defaultValue = "ASC" ) Sort.Direction direction) {
         return categoryService.getAllCategories(page, size, direction);
     }

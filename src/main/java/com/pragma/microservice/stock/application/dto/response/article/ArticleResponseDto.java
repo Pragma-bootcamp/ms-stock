@@ -3,11 +3,13 @@ package com.pragma.microservice.stock.application.dto.response.article;
 import com.pragma.microservice.stock.application.dto.response.brand.BrandSimpleResponseDto;
 import com.pragma.microservice.stock.application.dto.response.category.CategorySimpleResponseDto;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Set;
 @Getter
 @Setter
+@NoArgsConstructor
 public class ArticleResponseDto {
     private Long id;
     private String name;

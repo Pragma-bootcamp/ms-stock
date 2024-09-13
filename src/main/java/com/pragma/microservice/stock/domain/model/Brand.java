@@ -3,13 +3,13 @@ package com.pragma.microservice.stock.domain.model;
 import java.time.LocalDateTime;
 
 public class Brand {
-    private String id;
+    private Long id;
     private String name;
     private String description;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public Brand(String id, String name, String description) {
+    public Brand(Long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -18,10 +18,10 @@ public class Brand {
     }
     public Brand() {
     }
-    public String getId() {
+    public Long getId() {
         return id;
     }
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public String getName() {

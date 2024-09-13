@@ -53,7 +53,6 @@ public class ArticleService implements ArticleUseCase {
         Article articleCreated = articlePersistencePort.createArticle(articleToCreate);
         return new ApiResponseFormat<>(articleResponseDtoMapper.toDto(articleCreated), null);
     }
-
     @Override
     public ApiResponseFormat<List<ArticleResponseDto>> getAllArticles(Integer pageNumber, Integer pageSize,
                                                                       String sortBy, String sortDirection,
@@ -71,7 +70,6 @@ public class ArticleService implements ArticleUseCase {
                 .map(articleResponseDtoMapper::toDto).toList();
         return new ApiResponseFormat<>(listArticlesResponse, allArticles.getMetadata());
     }
-
     public void validatePagination(Integer pageNumber, Integer pageSize, String sortBy, String sortDirection,
                                    String filterBy, String filterValue) {
         boolean isCategoryFilter = filterBy.equals("category");
