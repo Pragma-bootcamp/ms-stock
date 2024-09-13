@@ -24,7 +24,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 
-import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -159,7 +158,7 @@ class ArticleServiceTest {
         Exception exception = assertThrows(FilterException.class, () -> {
             articleService.validatePagination(0, 10, "invalid", "asc", "none", "");
         });
-        assertEquals("The field 'sortBy' only can be 'name' 'price' 'amount'", exception.getMessage());
+        assertEquals(ArticleConstant.ARTICLE_SORT_BY_FIELDS, exception.getMessage());
     }
 
     @Test
@@ -167,7 +166,7 @@ class ArticleServiceTest {
         Exception exception = assertThrows(ArticleException.class, () -> {
             articleService.validatePagination(0, 10, "name", "invalid", "none", "");
         });
-        assertEquals("The param 'orderDir' must be 'asc' or 'desc'", exception.getMessage());
+        assertEquals(RequestConstant.ORDER_BY_FIELDS, exception.getMessage());
     }
 
     @Test
@@ -175,6 +174,27 @@ class ArticleServiceTest {
         Exception exception = assertThrows(FilterException.class, () -> {
             articleService.validatePagination(0, 10, "name", "asc", "invalidFilter", "");
         });
+        FilterException testException = new FilterException(HttpStatus.BAD_REQUEST.value(),RequestConstant.FILTER_BY_FIELDS);
+        assertEquals(testException.getErrorMessage(), exception.getMessage());
         assertEquals(RequestConstant.FILTER_BY_FIELDS, exception.getMessage());
+    }
+    @Test
+    void testValidatePagination_withCategoryFilterWithNoNumberValueFilter() {
+        Exception exception = assertThrows(FilterException.class, () -> {
+            articleService.validatePagination(0, 10, "name", "asc", "category", "A");
+        });
+        assertEquals(String.format(RequestConstant.FILTER_VALUE_MUST_BE_NUMBER,"filterValue"), exception.getMessage());
+    }
+
+    @Test
+    void testValidatePagination_withFilterByWithNoValueFilter() {
+        Exception exceptionFilterByCategory = assertThrows(FilterException.class, () -> {
+            articleService.validatePagination(0, 10, "name", "asc", "category", "");
+        });
+        Exception exceptionFilterByBrand = assertThrows(FilterException.class, () -> {
+            articleService.validatePagination(0, 10, "name", "asc", "brand", "");
+        });
+        assertEquals(String.format(RequestConstant.FILTER_VALUE_CANT_BE_NULL,"filterValue"), exceptionFilterByCategory.getMessage());
+        assertEquals(String.format(RequestConstant.FILTER_VALUE_CANT_BE_NULL,"filterValue"), exceptionFilterByBrand.getMessage());
     }
 }

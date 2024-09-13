@@ -1,7 +1,10 @@
 package com.pragma.microservice.stock.application.service;
 
+import com.pragma.microservice.stock.application.dto.request.constant.RequestConstant;
+import com.pragma.microservice.stock.application.exception.PaginationException;
 import com.pragma.microservice.stock.application.mapper.brand.BrandRequestDtoMapper;
 import com.pragma.microservice.stock.application.mapper.brand.BrandResponseDtoMapper;
+import com.pragma.microservice.stock.domain.exception.BrandException;
 import com.pragma.microservice.stock.domain.model.Brand;
 import com.pragma.microservice.stock.application.dto.request.BrandRequestDto;
 import com.pragma.microservice.stock.application.dto.response.brand.BrandResponseDto;
@@ -9,6 +12,7 @@ import com.pragma.microservice.stock.domain.port.BrandPersistencePort;
 import com.pragma.microservice.stock.application.usecase.BrandUseCase;
 import com.pragma.microservice.stock.domain.utils.ApiResponseFormat;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -46,5 +50,13 @@ public class BrandService implements BrandUseCase {
         List<BrandResponseDto> sortedBrands = response.getData().stream().sorted(comparator).map(brandResponseDtoMapper::toDto)
                 .toList();
         return new ApiResponseFormat<>(sortedBrands,response.getMetadata());
+    }
+    public void validatePagination(Integer pageNumber, Integer pageSize,  String sortDirection) {
+        if (pageNumber < 0 || pageSize < 0) {
+            throw new PaginationException(HttpStatus.BAD_REQUEST.value(), RequestConstant.PAGINATION_CANNOT_BE_NEGATIVE);
+        }
+        if(!(sortDirection.equals("ASC") || sortDirection.equals("DESC"))) {
+            throw new PaginationException(HttpStatus.BAD_REQUEST.value(), RequestConstant.ORDER_BY_FIELDS);
+        }
     }
 }

@@ -37,7 +37,7 @@ public class BrandController {
     public ApiResponseFormat<List<BrandResponseDto>> getAllBrands(
             @RequestParam(value = "page") int page,
             @RequestParam(value = "size") int size,
-            @RequestParam(value = "direction", defaultValue = "ASC" ) Sort.Direction direction) {
+            @RequestParam(value = "sortDir", defaultValue = "ASC" ) Sort.Direction direction) {
         return brandService.getAllBrand(page, size, direction);
     }
     public BrandController(BrandService brandService) {
